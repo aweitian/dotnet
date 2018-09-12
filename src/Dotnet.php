@@ -26,7 +26,11 @@ class Dotnet
         $ret = array();
         if ($path && file_exists($path)) {
             foreach (file($path) as $line) {
-                $line = trim("$line");
+                $line = trim($line);
+                if ($line == "")
+                    continue;
+                if ($line[0] == '#')
+                    continue;
                 $arr = explode("=", $line, 2);
                 $key = trim($arr[0]);
                 if (count($arr) == 2) {
