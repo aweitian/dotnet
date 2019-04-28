@@ -1,8 +1,8 @@
 <?php
 
-class PdoTest extends PHPUnit_Framework_TestCase
+class OnlyLoadTest extends PHPUnit_Framework_TestCase
 {
-    public function testUpdate()
+    public function testBase()
     {
         $test = new Aw\Dotnet(__DIR__ . "/.env");
         $arr = $test->load();

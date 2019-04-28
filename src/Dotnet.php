@@ -18,14 +18,22 @@ class Dotnet
         }
     }
 
-    public function load($path = null)
+    /**
+     * 使用字符串，将结果作为函数值返回,
+     * TRUE加载到$_ENV环境变量中去
+     * @param null $path
+     * @return array
+     */
+    public function load($path = null, $env_mode = false)
     {
-        if (is_null($path)) {
-            $path = $this->path;
+        if (is_string($path)) {
+            $this->path = $path;
+        } else if ($path === true) {
+            $env_mode = true;
         }
         $ret = array();
-        if ($path && file_exists($path)) {
-            foreach (file($path) as $line) {
+        if (is_string($this->path) && file_exists($this->path)) {
+            foreach (file($this->path) as $line) {
                 $line = trim($line);
                 if ($line == "")
                     continue;
@@ -33,10 +41,13 @@ class Dotnet
                     continue;
                 $arr = explode("=", $line, 2);
                 $key = trim($arr[0]);
+                $val = null;
                 if (count($arr) == 2) {
-                    $ret[$key] = $this->clean(trim($arr[1]));
-                } else {
-                    $ret[$key] = null;
+                    $val = $this->clean(trim($arr[1]));
+                }
+                $ret[$key] = $val;
+                if ($env_mode) {
+                    $_ENV[$key] = $val;
                 }
             }
         }
